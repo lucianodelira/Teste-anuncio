@@ -1,44 +1,61 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>Dois Iframes Sobrepostos</title>
+  <meta charset="UTF-8" />
+  <title>Teste de Impressão Monetag com Verificação</title>
   <style>
-    body, html {
-      margin: 0;
-      padding: 0;
-      height: 100%;
+    html, body {
+      margin: 0; padding: 0; height: 100%;
+      font-family: Arial, sans-serif;
     }
     .container {
-      position: relative;
-      width: 100%;
-      height: 100vh;
+      position: relative; width: 100%; height: 100vh;
     }
-    .invisible-iframe {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      border: none;
-      opacity: 0; /* invisível mas ainda carregado */
-      pointer-events: none; /* impede cliques nesse iframe */
-      z-index: 0;
+    iframe.visible {
+      position: absolute; width: 100%; height: 100%; border: none; z-index: 0;
     }
-    .top-iframe {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      border: none;
-      z-index: 1;
+    iframe.invisible {
+      position: absolute; width: 100%; height: 100%; border: none; 
+      opacity: 0; pointer-events: none; z-index: 1;
+    }
+    #status {
+      position: fixed;
+      top: 10px; left: 10px;
+      background: #222; color: #fff;
+      padding: 8px 12px;
+      border-radius: 4px;
+      font-size: 14px;
+      z-index: 10;
+      user-select: none;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <!-- iframe invisível -->
-    <iframe class="invisible-iframe" src="https://otieu.com/4/8938519"></iframe>
+    <!-- Site visível -->
+    <iframe class="visible" src="https://www.aguiaoficial.site"></iframe>
 
-    <!-- iframe visível por cima -->
-    <iframe class="top-iframe" src="https://www.aguiaoficial.site"></iframe>
+    <!-- Iframe invisível para impressão -->
+    <iframe id="monetagFrame" class="invisible" src="https://otieu.com/4/8938519"></iframe>
   </div>
+
+  <div id="status">Carregando iframe Monetag...</div>
+
+  <script>
+    const iframe = document.getElementById('monetagFrame');
+    const status = document.getElementById('status');
+
+    // Tenta detectar quando o iframe carrega
+    iframe.onload = () => {
+      status.textContent = 'Iframe Monetag carregado com sucesso! Impressão registrada (se permitido).';
+    };
+
+    // Não existe evento direto de erro para iframe, então vamos usar timeout para detectar falha
+    setTimeout(() => {
+      if (status.textContent.includes('Carregando')) {
+        status.textContent = 'Erro ao carregar iframe Monetag. Pode estar bloqueado por CSP ou X-Frame-Options.';
+      }
+    }, 5000); // espera 5 segundos
+  </script>
 </body>
 </html>
