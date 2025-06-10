@@ -2,60 +2,110 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8" />
-<title>Iframe visível + iframe clicável</title>
+<title>Banner com clique que ativa iframe anúncio</title>
 <style>
   html, body {
     margin: 0; padding: 0; height: 100%;
-    overflow: hidden;
+    font-family: Arial, sans-serif;
+    cursor: pointer;
   }
   .container {
     position: relative;
     width: 100%;
     height: 100vh;
   }
-  iframe.visible {
+  iframe.main-site {
     position: absolute;
     width: 100%;
     height: 100%;
     border: none;
-    z-index: 1;
+    z-index: 0;
   }
-  iframe.clickable {
-    position: absolute;
-    width: 100%;
-    height: 100%;
+  /* Banner fixo */
+  #banner {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #007bff;
+    color: white;
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    user-select: none;
+  }
+  #banner button {
+    background: white;
+    border: none;
+    color: #007bff;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 4px;
+  }
+
+  /* iframe invisível que aparece sobre o site e exatamente no clique */
+  #adIframe {
+    position: fixed;
+    width: 150px;  /* tamanho do botão ou área clicável */
+    height: 50px;
     border: none;
     opacity: 0;
-    z-index: 2;
-    pointer-events: none; /* inicialmente não recebe clique */
+    pointer-events: none;
+    z-index: 101;
     transition: opacity 0.3s ease;
+  }
+  #adIframe.active {
+    opacity: 1;
+    pointer-events: auto;
   }
 </style>
 </head>
 <body>
 
-<div class="container" id="iframeContainer">
-  <!-- iframe visível que o usuário vê -->
-  <iframe class="visible" src="https://www.aguiaoficial.site" id="visibleIframe"></iframe>
+<div class="container">
+  <!-- iframe principal do site visível -->
+  <iframe class="main-site" src="https://www.aguiaoficial.site" ></iframe>
 
-  <!-- iframe invisível para cliques -->
-  <iframe class="clickable" src="https://otieu.com/4/8938519" id="clickableIframe"></iframe>
+  <!-- banner com botão fechar -->
+  <div id="banner">
+    <span>Confira nosso anúncio!</span>
+    <button id="closeBtn">X</button>
+  </div>
+
+  <!-- iframe do anúncio invisível -->
+  <iframe id="adIframe" src="https://otieu.com/4/8938519"></iframe>
 </div>
 
 <script>
-  const container = document.getElementById('iframeContainer');
-  const clickableIframe = document.getElementById('clickableIframe');
+  const banner = document.getElementById('banner');
+  const closeBtn = document.getElementById('closeBtn');
+  const adIframe = document.getElementById('adIframe');
 
-  container.addEventListener('click', () => {
-    // Quando usuário clicar na área, torna iframe clicável visível para o clique ser registrado
-    clickableIframe.style.pointerEvents = 'auto'; // permite clique
-    clickableIframe.style.opacity = '1';
+  closeBtn.addEventListener('click', (event) => {
+    // Esconde o banner
+    banner.style.display = 'none';
 
-    // Após 1.5 segundos, volta a ficar invisível e não clicável
+    // Posiciona o iframe do anúncio exatamente onde o usuário clicou no botão X
+    const clickX = event.clientX;
+    const clickY = event.clientY;
+
+    // Ajusta o iframe para aparecer embaixo do clique
+    // Considerando o tamanho do iframe 150x50 (ajuste se mudar)
+    adIframe.style.left = (clickX - 75) + 'px'; // centraliza horizontalmente no clique
+    adIframe.style.top = (clickY - 25) + 'px';  // centraliza verticalmente no clique
+
+    // Mostra o iframe para o clique "atingir" ele
+    adIframe.classList.add('active');
+
+    // Depois de 2 segundos, esconde o iframe novamente
     setTimeout(() => {
-      clickableIframe.style.opacity = '0';
-      clickableIframe.style.pointerEvents = 'none';
-    }, 1500);
+      adIframe.classList.remove('active');
+    }, 2000);
   });
 </script>
 
