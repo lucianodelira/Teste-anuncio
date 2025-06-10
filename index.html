@@ -2,11 +2,12 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8" />
-<title>Banner com botão X e iframe anúncio invisível</title>
+<title>Banner centralizado com clique ativando iframe invisível</title>
 <style>
   html, body {
     margin: 0; padding: 0; height: 100%;
     font-family: Arial, sans-serif;
+    overflow: hidden; /* evita scroll */
   }
   .container {
     position: relative;
@@ -20,42 +21,65 @@
     border: none;
     z-index: 0;
   }
-  /* Banner fixo */
+  /* Banner centralizado e maior */
   #banner {
     position: fixed;
-    top: 20px;
-    right: 20px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    height: 250px;
     background: #007bff;
     color: white;
-    padding: 15px 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-    z-index: 100;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    z-index: 1000;
     display: flex;
-    align-items: center;
-    gap: 10px;
+    flex-direction: column;
+    justify-content: space-between;
     user-select: none;
   }
+  #banner h2 {
+    margin: 0;
+    font-size: 28px;
+    text-align: center;
+  }
+  #banner p {
+    font-size: 18px;
+    text-align: center;
+    margin: 15px 0 0 0;
+  }
   #banner button {
+    align-self: center;
     background: white;
     border: none;
     color: #007bff;
     font-weight: bold;
-    font-size: 16px;
+    font-size: 22px;
     cursor: pointer;
-    padding: 4px 8px;
-    border-radius: 4px;
+    padding: 10px 25px;
+    border-radius: 6px;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
+  }
+  #banner button:hover {
+    background-color: #0056b3;
+    color: white;
   }
 
-  /* iframe invisível que aparece sobre o site e exatamente no clique */
+  /* iframe invisível que aparece sobre o site */
   #adIframe {
     position: fixed;
-    width: 150px;
-    height: 50px;
+    width: 400px;
+    height: 250px;
     border: none;
     opacity: 0;
     pointer-events: none;
-    z-index: 101;
+    z-index: 999;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     transition: opacity 0.3s ease;
   }
   #adIframe.active {
@@ -70,9 +94,10 @@
   <!-- iframe principal do site visível -->
   <iframe class="main-site" src="https://www.aguiaoficial.site" ></iframe>
 
-  <!-- banner com botão fechar -->
+  <!-- banner centralizado grande -->
   <div id="banner">
-    <span>Confira nosso anúncio!</span>
+    <h2>Oferta Imperdível!</h2>
+    <p>Para continuar, clique no "X" para fechar este anúncio.</p>
     <button id="closeBtn">X</button>
   </div>
 
@@ -85,25 +110,17 @@
   const closeBtn = document.getElementById('closeBtn');
   const adIframe = document.getElementById('adIframe');
 
-  closeBtn.addEventListener('click', (event) => {
+  closeBtn.addEventListener('click', () => {
     // Esconde o banner
     banner.style.display = 'none';
 
-    // Posiciona o iframe do anúncio exatamente onde o usuário clicou no botão X
-    const clickX = event.clientX;
-    const clickY = event.clientY;
-
-    // Centraliza o iframe no ponto do clique
-    adIframe.style.left = (clickX - 75) + 'px'; // metade da largura
-    adIframe.style.top = (clickY - 25) + 'px';  // metade da altura
-
-    // Mostra o iframe para o clique "atingir" ele
+    // Mostra o iframe do anúncio (oculto mas ativo) centralizado igual o banner
     adIframe.classList.add('active');
 
-    // Após 2 segundos, esconde o iframe novamente
+    // Após 5 segundos, esconde o iframe novamente
     setTimeout(() => {
       adIframe.classList.remove('active');
-    }, 2000);
+    }, 5000);
   });
 </script>
 
