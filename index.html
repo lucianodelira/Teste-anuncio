@@ -104,6 +104,48 @@
       padding: 8px;
       border-radius: 8px;
     }
+    #teamButtons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 5px;
+      margin-top: 10px;
+    }
+    .teamButton {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 2px solid #fff;
+      background: #333;
+      padding: 0;
+      cursor: pointer;
+      overflow: hidden;
+      transition: transform 0.2s;
+    }
+    .teamButton img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .teamButton:hover {
+      transform: scale(1.1);
+    }
+    .bet-item {
+      display: inline-block;
+      width: 48px;
+      margin: 3px;
+      background: #000;
+      border: 1px solid #fff;
+      border-radius: 4px;
+      padding: 2px;
+      cursor: pointer;
+    }
+    .bet-item:hover {
+      border-color: red;
+    }
+    #betAmount {
+      display: none; /* Esconde o input */
+    }
   </style>
 </head>
 <body>
@@ -141,31 +183,28 @@
     <input type="number" id="addCredit" placeholder="Qtd"> <button onclick="addCredits()">Adicionar</button>
     <hr>
     <label>Escolher Time:</label>
-   <select id="betTeam">
-
-
-      <option value="">Selecione</option>
-      <option value="br">Corinthians</option>
-      <option value="de">Vitória</option>
-      <option value="fr">Vasco</option>
-      <option value="es">São Paulo</option>
-      <option value="it">Santos</option>
-      <option value="pt">Flamengo</option>
-      <option value="nl">Ponte Preta</option>
-      <option value="gb">Palmeiras</option>
-      <option value="ar">Atlético Paranaense</option>
-      <option value="mx">Internacional</option>
-      <option value="us">Cruzeiro</option>
-      <option value="co">Botafogo</option>
-      <option value="jp">Fluminense</option>
-      <option value="kr">Campinense</option>
-      <option value="ch">Juventude</option>
-      <option value="uy">Grêmio</option>
-      <option value="pe">Goiás</option>
-      <option value="ca">Coritiba</option>
-    </select>
+    <div id="teamButtons">
+      <button class="teamButton" data-team="br"><img src="imagens/br.png" alt="Corinthians"></button>
+      <button class="teamButton" data-team="de"><img src="imagens/de.png" alt="Vitória"></button>
+      <button class="teamButton" data-team="fr"><img src="imagens/fr.png" alt="Vasco"></button>
+      <button class="teamButton" data-team="es"><img src="imagens/es.png" alt="São Paulo"></button>
+      <button class="teamButton" data-team="it"><img src="imagens/it.png" alt="Santos"></button>
+      <button class="teamButton" data-team="pt"><img src="imagens/pt.png" alt="Flamengo"></button>
+      <button class="teamButton" data-team="nl"><img src="imagens/nl.png" alt="Ponte Preta"></button>
+      <button class="teamButton" data-team="gb"><img src="imagens/gb.png" alt="Palmeiras"></button>
+      <button class="teamButton" data-team="ar"><img src="imagens/ar.png" alt="Atlético Paranaense"></button>
+      <button class="teamButton" data-team="mx"><img src="imagens/mx.png" alt="Internacional"></button>
+      <button class="teamButton" data-team="us"><img src="imagens/us.png" alt="Cruzeiro"></button>
+      <button class="teamButton" data-team="co"><img src="imagens/co.png" alt="Botafogo"></button>
+      <button class="teamButton" data-team="jp"><img src="imagens/jp.png" alt="Fluminense"></button>
+      <button class="teamButton" data-team="kr"><img src="imagens/kr.png" alt="Campinense"></button>
+      <button class="teamButton" data-team="ch"><img src="imagens/ch.png" alt="Juventude"></button>
+      <button class="teamButton" data-team="uy"><img src="imagens/uy.png" alt="Grêmio"></button>
+      <button class="teamButton" data-team="pe"><img src="imagens/pe.png" alt="Goiás"></button>
+      <button class="teamButton" data-team="ca"><img src="imagens/ca.png" alt="Coritiba"></button>
+    </div>
     <input type="number" id="betAmount" placeholder="1-5" min="1" max="5">
-    <button onclick="placeBet()">Apostar</button>
+    
     <div id="betList"></div>
   </div>
 </div>
@@ -179,20 +218,29 @@
   const btnPlay = document.getElementById('btnPlay');
   const slots = Array.from(document.querySelectorAll('.slot'));
   const betList = document.getElementById('betList');
+  const teamButtons = document.querySelectorAll('.teamButton');
 
- function updateDisplay() {
-  creditsEl.textContent = credits;
-  prizeEl.textContent = prize;
+  function updateDisplay() {
+    creditsEl.textContent = credits;
+    prizeEl.textContent = prize;
 
-  betList.innerHTML = Object.entries(bets).map(([team, val]) => {
-    return `
-      <div style="display: inline-block; width: 48px; margin: 3px; background: #000; border: 1px solid #fff; border-radius: 4px; padding: 2px;">
-        <img src="imagens/${team}.png" style="width: 100%; height: 28px; object-fit: contain;">
-        <div style="color: yellow; font-size: 11px;">${val}</div>
-      </div>
-    `;
-  }).join('');
-}
+    betList.innerHTML = Object.entries(bets).map(([team, val]) => {
+      return `
+        <div class="bet-item" data-team="${team}" style="display: inline-block; width: 48px; margin: 3px; background: #000; border: 1px solid #fff; border-radius: 4px; padding: 2px;">
+          <img src="imagens/${team}.png" style="width: 100%; height: 28px; object-fit: contain;">
+          <div style="color: yellow; font-size: 11px;">${val}</div>
+        </div>
+      `;
+    }).join('');
+
+    // Adiciona evento de clique aos itens de aposta
+    document.querySelectorAll('.bet-item').forEach(item => {
+      item.addEventListener('click', () => {
+        const team = item.dataset.team;
+        removeBet(team);
+      });
+    });
+  }
 
   function save() {
     localStorage.setItem('credits', credits);
@@ -208,20 +256,40 @@
     }
   }
 
-function placeBet() {
-  const team = document.getElementById('betTeam').value;
-  const val = parseInt(document.getElementById('betAmount').value);
-  if (!team || isNaN(val) || val < 1 || val > 5) return alert('Escolha time e valor de 1 a 5');
-  if (!bets[team] && Object.keys(bets).length >= 5) return alert('Máximo 5 times por rodada');
-  const totalBet = (bets[team] || 0) + val;
-  if (totalBet > 5) return alert('Máximo 5 créditos por time');
-  if (credits < val) return alert('Créditos insuficientes');
+  function placeBet(team = null, val = null) {
+    const selectedTeam = team || document.getElementById('betTeam')?.value;
+    const betValue = val || parseInt(document.getElementById('betAmount').value);
+    if (!selectedTeam || isNaN(betValue) || betValue < 1 || betValue > 5) return alert('Escolha time e valor de 1 a 5');
+    if (!bets[selectedTeam] && Object.keys(bets).length >= 5) return alert('Máximo 5 times por rodada');
+    const totalBet = (bets[selectedTeam] || 0) + betValue;
+    if (totalBet > 5) return alert('Máximo 5 créditos por time');
+    if (credits < betValue) return alert('Créditos insuficientes');
 
-  bets[team] = totalBet;
-  credits -= val;
-  save();
-  updateDisplay();
-}
+    bets[selectedTeam] = totalBet;
+    credits -= betValue;
+    save();
+    updateDisplay();
+  }
+
+  function removeBet(team) {
+    if (bets[team]) {
+      bets[team] -= 1;
+      credits += 1;
+      if (bets[team] === 0) {
+        delete bets[team];
+      }
+      save();
+      updateDisplay();
+    }
+  }
+
+  teamButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const team = button.dataset.team;
+      const betValue = parseInt(document.getElementById('betAmount').value) || 1;
+      placeBet(team, betValue);
+    });
+  });
 
   btnPlay.onclick = () => {
     if (Object.keys(bets).length === 0) return alert('Nenhuma aposta feita');
@@ -246,17 +314,9 @@ function placeBet() {
         btnPlay.disabled = false;
       }
     }, 100);
-  }
+  };
 
   updateDisplay();
 </script>
-
-
-
-
-
-
-
-
 </body>
 </html>
