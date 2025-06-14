@@ -1,164 +1,114 @@
+<!-- Jogo Copa 2 para GitHub Pages -->
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Copa Caça-Níquel</title>
+<html lang="pt">
+<head><meta charset="UTF-8"><title>Copa 2 - Caça-Níquel</title>
   <style>
-    body {
-      background: linear-gradient(to bottom, #61c419, #f0f000);
-      font-family: 'Arial Black', sans-serif;
-      margin: 0;
-      padding: 0;
-      text-align: center;
-      overflow: hidden;
-    }
-
-    #game {
-      width: 360px;
-      margin: auto;
-      position: relative;
-      top: 10px;
-    }
-
-    .scoreboard {
-      display: flex;
-      justify-content: space-between;
-      background: #000;
-      color: #0f0;
-      padding: 10px 20px;
-      font-size: 18px;
-    }
-
-    #board {
-      display: grid;
-      grid-template-areas:
-        "tl    t1  t2  t3  t4  tr"
-        "l1    .   .   .   .  r1"
-        "l2    .  btn  .   .  r2"
-        "l3    .   .   .   .  r3"
-        "bl    b4  b3  b2  b1  br";
-      gap: 2px;
-      margin-top: 10px;
-    }
-
-    .cell {
-      width: 50px;
-      height: 50px;
-      background: white;
-      border: 2px solid #000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .cell img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .blink {
-      animation: blink 0.2s infinite alternate;
-    }
-
-    @keyframes blink {
-      from { filter: brightness(1); }
-      to { filter: brightness(2); }
-    }
-
-    #playButton {
-      grid-area: btn;
-      background: red;
-      color: white;
-      font-size: 18px;
-      border: 4px solid #fff;
-      border-radius: 10px;
-      cursor: pointer;
-      height: 100px;
-      width: 100px;
-      margin: auto;
-    }
+    body { margin:0; padding:0; text-align:center; font-family:Arial, sans-serif; background:#222; color:#fff; overflow:hidden; }
+    #game{position:relative; max-width:380px; margin:20px auto;}
+    .score{display:flex; justify-content:space-between; background:#000; padding:8px; border:2px solid gold; border-radius:6px; font-size:14px;}
+    #painel{display:grid; grid-template-columns:repeat(4,80px); grid-template-rows:repeat(5,80px); gap:2px; margin:8px;}
+    .slot{width:80px; height:80px; background:#111; border:2px solid #333; display:flex; justify-content:center; align-items:center; position:relative;}
+    .slot.blink{animation:brilho 0.3s infinite alternate;}
+    @keyframes brilho {from{border-color:gold;}to{border-color:red;}}
+    #btnPlay{grid-column:2/4; grid-row:3/4; background:red; color:#fff; font-size:18px; font-weight:bold; border:4px solid #fff; border-radius:10px; cursor:pointer;}
+    #btnPlay:disabled{opacity:0.5; cursor:not-allowed;}
+    #winnerOverlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.8);display:none;justify-content:center;align-items:center;}
+    #winBox{background:#fff;color:#000;padding:16px;border-radius:8px;max-width:90%;}
+    #coinArea{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;}
+    .coin{position:absolute;width:20px;height:20px;background:gold;border-radius:50%;animation:coinJump 1s linear forwards;}
+    @keyframes coinJump{0%{opacity:1}100%{transform:translateY(-200px) scale(0.5);opacity:0;}}
   </style>
 </head>
 <body>
-
-<div id="game">
-  <div class="scoreboard">
-    <div>🎁 PRÊMIO: <span id="prize">000000</span></div>
-    <div>💰 CRÉDITOS: <span id="credits">000100</span></div>
+  <div id="game">
+    <div class="score"><div>Prêmio:<span id="prize">0</span></div><div>Créditos:<span id="credits">100</span></div></div>
+    <div id="painel"></div>
+    <button id="btnPlay">JOGAR</button>
+    <div id="coinArea"></div>
   </div>
+  <div id="winnerOverlay"><div id="winBox"><h2 id="msgWinner"></h2><button onclick="closeWin()">OK</button></div></div>
 
-  <div id="board">
-    <!-- Top Row -->
-    <div class="cell" style="grid-area: tl;"></div>
-    <div class="cell" style="grid-area: t1;"><img src="https://flagcdn.com/w40/br.png" /></div>
-    <div class="cell" style="grid-area: t2;"><img src="https://flagcdn.com/w40/de.png" /></div>
-    <div class="cell" style="grid-area: t3;"><img src="https://flagcdn.com/w40/fr.png" /></div>
-    <div class="cell" style="grid-area: t4;"><img src="https://flagcdn.com/w40/es.png" /></div>
-    <div class="cell" style="grid-area: tr;"></div>
+  <!-- Sons -->
+  <audio id="sndStart" src="https://mixkit.co/download/game-sound-start.mp3" preload="auto"></audio>
+  <audio id="sndWin" src="https://mixkit.co/download/game-sound-win.mp3" preload="auto"></audio>
+  <audio id="sndLose" src="https://mixkit.co/download/game-sound-lose.mp3" preload="auto"></audio>
 
-    <!-- Left and Right Sides -->
-    <div class="cell" style="grid-area: l1;"><img src="https://flagcdn.com/w40/ar.png" /></div>
-    <div class="cell" style="grid-area: l2;"><img src="https://flagcdn.com/w40/pt.png" /></div>
-    <div class="cell" style="grid-area: l3;"><img src="https://flagcdn.com/w40/it.png" /></div>
-    <div class="cell" style="grid-area: r1;"><img src="https://flagcdn.com/w40/nl.png" /></div>
-    <div class="cell" style="grid-area: r2;"><img src="https://flagcdn.com/w40/gb.png" /></div>
-    <div class="cell" style="grid-area: r3;"><img src="https://flagcdn.com/w40/us.png" /></div>
+  <script>
+    const flags = ['br','de','fr','es','ar','pt','it','nl','gb','us','mx','co','ch','uy','jp','kr'];
+    const painel = document.getElementById('painel');
+    for(let i=0;i<20;i++){
+      const slot = document.createElement('div'); slot.className='slot';
+      const img = document.createElement('img'); img.src=`https://flagcdn.com/w80/${flags[i%flags.length]}.png`;
+      img.style.maxWidth='100%';
+      slot.appendChild(img);
+      painel.append(slot);
+    }
+    const creditsEl= document.getElementById('credits'), prizeEl=document.getElementById('prize');
+    let credits = parseInt(localStorage.getItem('credits'))||100;
+    let prize = parseInt(localStorage.getItem('prize'))||0;
+    creditsEl.textContent=credits; prizeEl.textContent=prize;
+    function save(){localStorage.setItem('credits',credits);localStorage.setItem('prize',prize);}
+    const btn=document.getElementById('btnPlay'), slots=document.querySelectorAll('.slot');
+    const sndStart=document.getElementById('sndStart'),
+          sndWin=document.getElementById('sndWin'),
+          sndLose=document.getElementById('sndLose'),
+          coinArea=document.getElementById('coinArea');
+    const overlay=document.getElementById('winnerOverlay'), msgWinner=document.getElementById('msgWinner');
 
-    <!-- Bottom Row -->
-    <div class="cell" style="grid-area: bl;"></div>
-    <div class="cell" style="grid-area: b4;"><img src="https://flagcdn.com/w40/mx.png" /></div>
-    <div class="cell" style="grid-area: b3;"><img src="https://flagcdn.com/w40/co.png" /></div>
-    <div class="cell" style="grid-area: b2;"><img src="https://flagcdn.com/w40/ch.png" /></div>
-    <div class="cell" style="grid-area: b1;"><img src="https://flagcdn.com/w40/uy.png" /></div>
-    <div class="cell" style="grid-area: br;"></div>
+    btn.onclick = ()=>{
+      if(credits<1){ alert('Sem créditos!'); btn.disabled=true; return; }
+      credits--; save(); creditsEl.textContent=credits;
+      btn.disabled=true;
+      sndStart.play().catch(() => {});
+      let count=0,flash=30+Math.random()*30;
+      const iv = setInterval(()=>{
+        slots.forEach(s=>s.classList.remove('blink'));
+        const idx=Math.floor(Math.random()*slots.length);
+        slots[idx].classList.add('blink');
+        if(++count>=flash){
+          clearInterval(iv);
+          const winIdx = idx;
+          slots.forEach(s=>s.classList.remove('blink'));
+          slots[winIdx].classList.add('blink');
+          const gain = Math.floor(Math.random()*20)+5;
+          prize+=gain; credits+=gain;
+          save();
+          prizeEl.textContent=prize;
+          creditsEl.textContent=credits;
+          sndWin.play().catch(() => {});
+          animateCoins(15);
+          sendRank(gain);
+          showWin(`TIME GANHADOR +${gain}`);
+          btn.disabled=false;
+        }
+      },100);
+    };
 
-    <!-- Play Button in Center -->
-    <button id="playButton">🎰 JOGAR</button>
-  </div>
-</div>
-
-<script>
-  const creditsEl = document.getElementById("credits");
-  const prizeEl = document.getElementById("prize");
-  const playButton = document.getElementById("playButton");
-  const outerCells = Array.from(document.querySelectorAll('.cell img'));
-  let isPlaying = false;
-
-  function updateCredits(amount) {
-    let current = parseInt(creditsEl.textContent);
-    current += amount;
-    creditsEl.textContent = current.toString().padStart(6, "0");
-  }
-
-  function updatePrize(amount) {
-    prizeEl.textContent = amount.toString().padStart(6, "0");
-  }
-
-  playButton.addEventListener("click", () => {
-    if (isPlaying) return;
-    isPlaying = true;
-    updateCredits(-1);
-    let flashes = 30 + Math.floor(Math.random() * 20);
-    let count = 0;
-    let current = 0;
-    const interval = setInterval(() => {
-      outerCells.forEach(cell => cell.classList.remove('blink'));
-      outerCells[current % outerCells.length].classList.add('blink');
-      current++;
-      count++;
-      if (count >= flashes) {
-        clearInterval(interval);
-        outerCells.forEach(cell => cell.classList.remove('blink'));
-        let winner = outerCells[current % outerCells.length];
-        winner.classList.add('blink');
-        updatePrize(Math.floor(Math.random() * 5000));
-        updateCredits(Math.floor(Math.random() * 5));
-        isPlaying = false;
+    function animateCoins(n){
+      for(let i=0;i<n;i++){
+        const c=document.createElement('div');c.className='coin';
+        c.style.left= Math.random()*90+'%';
+        c.style.top='80%';
+        coinArea.append(c);
+        c.addEventListener('animationend',()=>c.remove());
       }
-    }, 100);
-  });
-</script>
+    }
+    function showWin(msg){ msgWinner.textContent=msg; overlay.style.display='flex'; }
+    function closeWin(){
+      overlay.style.display='none';
+      slots.forEach(s=>s.classList.remove('blink'));
+      if(credits<1) btn.disabled=true;
+    }
 
+    function sendRank(gain){
+      const token=prompt('Digite nome/token:')||'Anon';
+      fetch('https://seu-servidor.com/api/ranking',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({player:token, prize:gain, time:Date.now()})
+      }).catch(e=>console.log('Ranking erro',e));
+    }
+
+  </script>
 </body>
 </html>
