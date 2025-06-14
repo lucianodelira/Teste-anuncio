@@ -244,6 +244,7 @@
     <button id="pixButton">💸 Sacar via Pix</button>
   </div>
   <!-- Elementos de áudio -->
+  <audio id="backgroundSound" src="sons/background.mp3" loop autoplay></audio>
   <audio id="clickSound" src="sons/click.mp3"></audio>
   <audio id="spinSound" src="sons/spin.mp3"></audio>
   <audio id="winSound" src="sons/win.mp3"></audio>
@@ -261,10 +262,19 @@
   const betList = document.getElementById('betList');
   const teamButtons = document.querySelectorAll('.teamButton');
   const pixButton = document.getElementById('pixButton');
+  const backgroundSound = document.getElementById('backgroundSound');
   const clickSound = document.getElementById('clickSound');
   const spinSound = document.getElementById('spinSound');
   const winSound = document.getElementById('winSound');
   const loseSound = document.getElementById('loseSound');
+
+  // Configura o volume da trilha de fundo
+  backgroundSound.volume = 0.2;
+
+  // Inicia a trilha de fundo na primeira interação para contornar restrições de autoplay
+  document.addEventListener('click', () => {
+    backgroundSound.play().catch(() => {});
+  }, { once: true });
 
   function updateDisplay() {
     creditsEl.textContent = credits;
@@ -313,7 +323,7 @@
 
     bets[selectedTeam] = totalBet;
     credits -= betValue;
-    clickSound.play().catch(() => {}); // Toca som de clique
+    clickSound.play().catch(() => {});
     save();
     updateDisplay();
   }
@@ -325,7 +335,7 @@
       if (bets[team] === 0) {
         delete bets[team];
       }
-      clickSound.play().catch(() => {}); // Toca som de clique
+      clickSound.play().catch(() => {});
       save();
       updateDisplay();
     }
@@ -346,7 +356,7 @@
   btnPlay.onclick = () => {
     if (Object.keys(bets).length === 0) return alert('Nenhuma aposta feita');
     btnPlay.disabled = true;
-    spinSound.play().catch(() => {}); // Toca som de spin
+    spinSound.play().catch(() => {});
     slots.forEach(s => s.classList.remove('blink'));
     let count = 0;
     const flashes = 20 + Math.floor(Math.random() * 10);
@@ -364,10 +374,10 @@
         save();
         updateDisplay();
         if (win) {
-          winSound.play().catch(() => {}); // Toca som de vitória
+          winSound.play().catch(() => {});
           alert(`GANHOU ${win} CRÉDITOS!`);
         } else {
-          loseSound.play().catch(() => {}); // Toca som de derrota
+          loseSound.play().catch(() => {});
           alert('NÃO FOI DESSA VEZ');
         }
         btnPlay.disabled = false;
