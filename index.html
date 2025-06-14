@@ -2,142 +2,162 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Caça-Níquel de Times</title>
+  <title>Copa Caça-Níquel</title>
   <style>
     body {
-      background: #121212;
-      color: #fff;
-      font-family: Arial, sans-serif;
+      background: linear-gradient(to bottom, #61c419, #f0f000);
+      font-family: 'Arial Black', sans-serif;
+      margin: 0;
+      padding: 0;
       text-align: center;
-      padding: 30px;
+      overflow: hidden;
     }
 
-    h1 {
-      color: gold;
+    #game {
+      width: 360px;
+      margin: auto;
+      position: relative;
+      top: 10px;
     }
 
-    #grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 15px;
-      max-width: 500px;
-      margin: 30px auto;
-    }
-
-    .team {
-      background: #1f1f1f;
-      padding: 20px;
-      border-radius: 12px;
-      border: 2px solid #333;
-      cursor: pointer;
+    .scoreboard {
+      display: flex;
+      justify-content: space-between;
+      background: #000;
+      color: #0f0;
+      padding: 10px 20px;
       font-size: 18px;
-      transition: 0.3s;
     }
 
-    .team.selected {
-      border-color: lime;
-      background-color: #2e2e2e;
+    #board {
+      display: grid;
+      grid-template-areas:
+        "tl    t1  t2  t3  t4  tr"
+        "l1    .   .   .   .  r1"
+        "l2    .  btn  .   .  r2"
+        "l3    .   .   .   .  r3"
+        "bl    b4  b3  b2  b1  br";
+      gap: 2px;
+      margin-top: 10px;
     }
 
-    .team.winner {
-      background-color: gold;
-      color: #000;
-      font-weight: bold;
+    .cell {
+      width: 50px;
+      height: 50px;
+      background: white;
+      border: 2px solid #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    #controls {
-      margin-top: 30px;
+    .cell img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
 
-    select, button {
-      padding: 10px;
-      margin: 10px;
-      font-size: 16px;
+    .blink {
+      animation: blink 0.2s infinite alternate;
     }
 
-    button {
-      background: gold;
-      border: none;
+    @keyframes blink {
+      from { filter: brightness(1); }
+      to { filter: brightness(2); }
+    }
+
+    #playButton {
+      grid-area: btn;
+      background: red;
+      color: white;
+      font-size: 18px;
+      border: 4px solid #fff;
+      border-radius: 10px;
       cursor: pointer;
-      border-radius: 6px;
-    }
-
-    button:hover {
-      background: orange;
+      height: 100px;
+      width: 100px;
+      margin: auto;
     }
   </style>
 </head>
 <body>
 
-<h1>🏆 Cassino de Times</h1>
+<div id="game">
+  <div class="scoreboard">
+    <div>🎁 PRÊMIO: <span id="prize">000000</span></div>
+    <div>💰 CRÉDITOS: <span id="credits">000100</span></div>
+  </div>
 
-<div id="grid">
-  <div class="team">Palmeiras</div>
-  <div class="team">Flamengo</div>
-  <div class="team">Corinthians</div>
-  <div class="team">São Paulo</div>
-  <div class="team">Grêmio</div>
-  <div class="team">Cruzeiro</div>
-  <div class="team">Atlético-MG</div>
-  <div class="team">Internacional</div>
-  <div class="team">Vasco</div>
-  <div class="team">Botafogo</div>
-  <div class="team">Bahia</div>
-  <div class="team">Fortaleza</div>
-</div>
+  <div id="board">
+    <!-- Top Row -->
+    <div class="cell" style="grid-area: tl;"></div>
+    <div class="cell" style="grid-area: t1;"><img src="https://flagcdn.com/w40/br.png" /></div>
+    <div class="cell" style="grid-area: t2;"><img src="https://flagcdn.com/w40/de.png" /></div>
+    <div class="cell" style="grid-area: t3;"><img src="https://flagcdn.com/w40/fr.png" /></div>
+    <div class="cell" style="grid-area: t4;"><img src="https://flagcdn.com/w40/es.png" /></div>
+    <div class="cell" style="grid-area: tr;"></div>
 
-<div id="controls">
-  <label>Escolha o valor (moedas):</label>
-  <select id="coinValue">
-    <option value="1">1 Moeda</option>
-    <option value="5">5 Moedas</option>
-    <option value="10">10 Moedas</option>
-  </select>
-  <br>
-  <button onclick="startGame()">🎰 Jogar</button>
+    <!-- Left and Right Sides -->
+    <div class="cell" style="grid-area: l1;"><img src="https://flagcdn.com/w40/ar.png" /></div>
+    <div class="cell" style="grid-area: l2;"><img src="https://flagcdn.com/w40/pt.png" /></div>
+    <div class="cell" style="grid-area: l3;"><img src="https://flagcdn.com/w40/it.png" /></div>
+    <div class="cell" style="grid-area: r1;"><img src="https://flagcdn.com/w40/nl.png" /></div>
+    <div class="cell" style="grid-area: r2;"><img src="https://flagcdn.com/w40/gb.png" /></div>
+    <div class="cell" style="grid-area: r3;"><img src="https://flagcdn.com/w40/us.png" /></div>
+
+    <!-- Bottom Row -->
+    <div class="cell" style="grid-area: bl;"></div>
+    <div class="cell" style="grid-area: b4;"><img src="https://flagcdn.com/w40/mx.png" /></div>
+    <div class="cell" style="grid-area: b3;"><img src="https://flagcdn.com/w40/co.png" /></div>
+    <div class="cell" style="grid-area: b2;"><img src="https://flagcdn.com/w40/ch.png" /></div>
+    <div class="cell" style="grid-area: b1;"><img src="https://flagcdn.com/w40/uy.png" /></div>
+    <div class="cell" style="grid-area: br;"></div>
+
+    <!-- Play Button in Center -->
+    <button id="playButton">🎰 JOGAR</button>
+  </div>
 </div>
 
 <script>
-  const teams = document.querySelectorAll('.team');
-  let selectedTeam = null;
+  const creditsEl = document.getElementById("credits");
+  const prizeEl = document.getElementById("prize");
+  const playButton = document.getElementById("playButton");
+  const outerCells = Array.from(document.querySelectorAll('.cell img'));
+  let isPlaying = false;
 
-  teams.forEach(team => {
-    team.addEventListener('click', () => {
-      teams.forEach(t => t.classList.remove('selected'));
-      team.classList.add('selected');
-      selectedTeam = team;
-    });
-  });
+  function updateCredits(amount) {
+    let current = parseInt(creditsEl.textContent);
+    current += amount;
+    creditsEl.textContent = current.toString().padStart(6, "0");
+  }
 
-  function startGame() {
-    if (!selectedTeam) {
-      alert("Escolha um time para apostar!");
-      return;
-    }
+  function updatePrize(amount) {
+    prizeEl.textContent = amount.toString().padStart(6, "0");
+  }
 
-    const coinValue = document.getElementById("coinValue").value;
-
-    teams.forEach(t => t.classList.remove('winner'));
-    
-    let flashes = 25 + Math.floor(Math.random() * 10);
+  playButton.addEventListener("click", () => {
+    if (isPlaying) return;
+    isPlaying = true;
+    updateCredits(-1);
+    let flashes = 30 + Math.floor(Math.random() * 20);
     let count = 0;
-    let flashInterval = setInterval(() => {
-      teams.forEach(t => t.classList.remove('winner'));
-      const rand = Math.floor(Math.random() * teams.length);
-      teams[rand].classList.add('winner');
+    let current = 0;
+    const interval = setInterval(() => {
+      outerCells.forEach(cell => cell.classList.remove('blink'));
+      outerCells[current % outerCells.length].classList.add('blink');
+      current++;
       count++;
-
       if (count >= flashes) {
-        clearInterval(flashInterval);
-        const winner = teams[rand];
-        if (winner === selectedTeam) {
-          alert("🎉 Parabéns! Você ganhou com " + coinValue + " moedas!");
-        } else {
-          alert("😢 Não foi dessa vez. Tente novamente!");
-        }
+        clearInterval(interval);
+        outerCells.forEach(cell => cell.classList.remove('blink'));
+        let winner = outerCells[current % outerCells.length];
+        winner.classList.add('blink');
+        updatePrize(Math.floor(Math.random() * 5000));
+        updateCredits(Math.floor(Math.random() * 5));
+        isPlaying = false;
       }
     }, 100);
-  }
+  });
 </script>
 
 </body>
