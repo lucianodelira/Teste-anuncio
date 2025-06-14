@@ -42,12 +42,13 @@
     #board {
       display: grid;
       grid-template-areas:
-        "tl t1 t2 t3 t4 tr"
-        "l1 .  .  .  .  r1"
-        "l2 .  btn .  .  r2"
-        "l3 .  .  .  .  r3"
-        "bl b4 b3 b2 b1 br";
-      gap: 2px;
+  "tl t1 t2 t3 t4 tr"
+  "l1 btn btn btn btn r1"
+  "l2 btn btn btn btn r2"
+  "l3 btn btn btn btn r3"
+  "bl b4 b3 b2 b1 br";
+
+      gap: 0px;
       margin-top: 10px;
     }
     .slot {
@@ -67,16 +68,24 @@
       from { border-color: gold; }
       to { border-color: red; }
     }
-    .center-image {
-      grid-area: btn;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    .center-image img {
-      width: 48px;
-      height: 48px;
-    }
+ .center-image {
+  grid-area: btn;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: black;
+}
+
+.center-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+
+
     #btnPlay {
       margin-top: 12px;
       width: 100%;
