@@ -6,6 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/6.7.0/css/flag-icon.min.css">
   <style>
+    * {
+      box-sizing: border-box;
+    }
     body {
       margin: 0;
       padding: 0;
@@ -14,12 +17,12 @@
       text-align: center;
     }
     #app {
-      max-width: 420px;
-      margin: auto;
+      max-width: 360px;
+      margin: 10px auto;
       background: #000;
-      border-radius: 12px;
+      border-radius: 10px;
       overflow: hidden;
-      box-shadow: 0 0 20px #000;
+      box-shadow: 0 0 15px #000;
     }
     .top-bar {
       display: flex;
@@ -27,13 +30,13 @@
       background: #222;
       color: #fff;
       font-weight: bold;
-      font-size: 14px;
-      padding: 8px 12px;
+      font-size: 12px;
+      padding: 6px 10px;
     }
     .top-bar span {
       background: #444;
-      padding: 4px 8px;
-      border-radius: 6px;
+      padding: 3px 6px;
+      border-radius: 5px;
       color: yellow;
     }
     #board {
@@ -44,8 +47,8 @@
         "l2 btn btn btn btn r2"
         "l3 btn btn btn btn r3"
         "bl b4 b3 b2 b1 br";
-      gap: 3px;
-      margin-top: 10px;
+      gap: 2px;
+      margin-top: 8px;
     }
     .slot {
       background: white;
@@ -53,8 +56,8 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      width: 60px;
-      height: 60px;
+      width: 45px;
+      height: 45px;
     }
     .center-image {
       grid-area: btn;
@@ -69,21 +72,24 @@
       object-fit: contain;
     }
     #btnPlay {
-      margin-top: 12px;
+      margin-top: 10px;
       width: 100%;
-      height: 50px;
+      height: 40px;
       background: red;
       border: none;
       color: white;
-      font-size: 18px;
+      font-size: 16px;
       font-weight: bold;
       cursor: pointer;
-      border-radius: 10px;
+      border-radius: 8px;
+    }
+    #btnPlay:active {
+      animation: pulse 0.2s;
     }
     #menu {
       background: #111;
       color: white;
-      padding: 10px;
+      padding: 8px;
     }
     .flag-img {
       width: 100%;
@@ -92,30 +98,41 @@
     }
     .blink {
       animation: brilho 0.3s infinite alternate;
+      box-shadow: 0 0 10px gold;
     }
     @keyframes brilho {
       from { border-color: gold; }
       to { border-color: red; }
     }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-3px); }
+      75% { transform: translateX(3px); }
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
     #betList {
-      margin-top: 10px;
+      margin-top: 8px;
       background: #222;
       color: #fff;
-      padding: 8px;
-      border-radius: 8px;
+      padding: 6px;
+      border-radius: 6px;
     }
     #teamButtons {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 5px;
-      margin-top: 10px;
+      gap: 4px;
+      margin-top: 8px;
     }
     .teamButton {
-      width: 40px;
-      height: 40px;
+      width: 30px;
+      height: 30px;
       border-radius: 50%;
-      border: 2px solid #fff;
+      border: 1px solid #fff;
       background: #333;
       padding: 0;
       cursor: pointer;
@@ -130,10 +147,13 @@
     .teamButton:hover {
       transform: scale(1.1);
     }
+    .teamButton:active {
+      animation: shake 0.2s;
+    }
     .bet-item {
       display: inline-block;
-      width: 48px;
-      margin: 3px;
+      width: 40px;
+      margin: 2px;
       background: #000;
       border: 1px solid #fff;
       border-radius: 4px;
@@ -147,16 +167,16 @@
       display: none;
     }
     #pixButton {
-      margin-top: 10px;
+      margin-top: 8px;
       width: 100%;
-      height: 40px;
+      height: 35px;
       background: #00cc00;
-      border: 2px solid #fff;
+      border: 1px solid #fff;
       color: white;
-      font-size: 16px;
+      font-size: 14px;
       font-weight: bold;
       cursor: pointer;
-      border-radius: 8px;
+      border-radius: 6px;
       transition: transform 0.2s;
     }
     #pixButton:hover {
@@ -220,10 +240,14 @@
       <button class="teamButton" data-team="ca"><img src="imagens/ca.png" alt="Coritiba"></button>
     </div>
     <input type="number" id="betAmount" placeholder="1-5" min="1" max="5">
-   
     <div id="betList"></div>
     <button id="pixButton">💸 Sacar via Pix</button>
   </div>
+  <!-- Elementos de áudio -->
+  <audio id="clickSound" src="sons/click.mp3"></audio>
+  <audio id="spinSound" src="sons/spin.mp3"></audio>
+  <audio id="winSound" src="sons/win.mp3"></audio>
+  <audio id="loseSound" src="sons/lose.mp3"></audio>
 </div>
 <script>
   let credits = parseInt(localStorage.getItem('credits')) || 100;
@@ -237,6 +261,10 @@
   const betList = document.getElementById('betList');
   const teamButtons = document.querySelectorAll('.teamButton');
   const pixButton = document.getElementById('pixButton');
+  const clickSound = document.getElementById('clickSound');
+  const spinSound = document.getElementById('spinSound');
+  const winSound = document.getElementById('winSound');
+  const loseSound = document.getElementById('loseSound');
 
   function updateDisplay() {
     creditsEl.textContent = credits;
@@ -244,9 +272,9 @@
 
     betList.innerHTML = Object.entries(bets).map(([team, val]) => {
       return `
-        <div class="bet-item" data-team="${team}" style="display: inline-block; width: 48px; margin: 3px; background: #000; border: 1px solid #fff; border-radius: 4px; padding: 2px;">
-          <img src="imagens/${team}.png" style="width: 100%; height: 28px; object-fit: contain;">
-          <div style="color: yellow; font-size: 11px;">${val}</div>
+        <div class="bet-item" data-team="${team}" style="display: inline-block; width: 40px; margin: 2px; background: #000; border: 1px solid #fff; border-radius: 4px; padding: 2px;">
+          <img src="imagens/${team}.png" style="width: 100%; height: 24px; object-fit: contain;">
+          <div style="color: yellow; font-size: 10px;">${val}</div>
         </div>
       `;
     }).join('');
@@ -285,6 +313,7 @@
 
     bets[selectedTeam] = totalBet;
     credits -= betValue;
+    clickSound.play().catch(() => {}); // Toca som de clique
     save();
     updateDisplay();
   }
@@ -296,6 +325,7 @@
       if (bets[team] === 0) {
         delete bets[team];
       }
+      clickSound.play().catch(() => {}); // Toca som de clique
       save();
       updateDisplay();
     }
@@ -316,6 +346,7 @@
   btnPlay.onclick = () => {
     if (Object.keys(bets).length === 0) return alert('Nenhuma aposta feita');
     btnPlay.disabled = true;
+    spinSound.play().catch(() => {}); // Toca som de spin
     slots.forEach(s => s.classList.remove('blink'));
     let count = 0;
     const flashes = 20 + Math.floor(Math.random() * 10);
@@ -332,7 +363,13 @@
         bets = {};
         save();
         updateDisplay();
-        alert(win ? `GANHOU ${win} CRÉDITOS!` : 'NÃO FOI DESSA VEZ');
+        if (win) {
+          winSound.play().catch(() => {}); // Toca som de vitória
+          alert(`GANHOU ${win} CRÉDITOS!`);
+        } else {
+          loseSound.play().catch(() => {}); // Toca som de derrota
+          alert('NÃO FOI DESSA VEZ');
+        }
         btnPlay.disabled = false;
       }
     }, 100);
