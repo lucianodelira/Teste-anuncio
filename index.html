@@ -56,6 +56,7 @@
       width: 60px;
       height: 60px;
       position: relative;
+      font-size: 28px;
     }
     .slot.blink {
       animation: brilho 0.3s infinite alternate;
@@ -64,10 +65,20 @@
       from { border-color: gold; }
       to { border-color: red; }
     }
-    #btnPlay {
+    .center-image {
       grid-area: btn;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .center-image img {
+      width: 48px;
+      height: 48px;
+    }
+    #btnPlay {
+      margin-top: 12px;
       width: 100%;
-      height: 100%;
+      height: 50px;
       background: red;
       border: 4px solid white;
       color: white;
@@ -105,6 +116,7 @@
       display: none;
       justify-content: center;
       align-items: center;
+      z-index: 1000;
     }
     #winBox {
       background: white;
@@ -125,33 +137,37 @@
 
   <div id="board">
     <!-- Topo -->
-    <div class="slot" style="grid-area:tl"><span class="flag-icon flag-icon-br" title="Brasil"></span></div>
-    <div class="slot" style="grid-area:t1"><span class="flag-icon flag-icon-de" title="Alemanha"></span></div>
-    <div class="slot" style="grid-area:t2"><span class="flag-icon flag-icon-fr" title="França"></span></div>
-    <div class="slot" style="grid-area:t3"><span class="flag-icon flag-icon-es" title="Espanha"></span></div>
-    <div class="slot" style="grid-area:t4"><span class="flag-icon flag-icon-ar" title="Argentina"></span></div>
-    <div class="slot" style="grid-area:tr"><span class="flag-icon flag-icon-pt" title="Portugal"></span></div>
+    <div class="slot" style="grid-area:tl"><span class="flag-icon flag-icon-br"></span></div>
+    <div class="slot" style="grid-area:t1"><span class="flag-icon flag-icon-de"></span></div>
+    <div class="slot" style="grid-area:t2"><span class="flag-icon flag-icon-fr"></span></div>
+    <div class="slot" style="grid-area:t3"><span class="flag-icon flag-icon-es"></span></div>
+    <div class="slot" style="grid-area:t4"><span class="flag-icon flag-icon-it"></span></div>
+    <div class="slot" style="grid-area:tr"><span class="flag-icon flag-icon-pt"></span></div>
 
     <!-- Laterais -->
-    <div class="slot" style="grid-area:l1"><span class="flag-icon flag-icon-it" title="Itália"></span></div>
-    <div class="slot" style="grid-area:l2"><span class="flag-icon flag-icon-nl" title="Holanda"></span></div>
-    <div class="slot" style="grid-area:l3"><span class="flag-icon flag-icon-gb" title="Reino Unido"></span></div>
-    <div class="slot" style="grid-area:r1"><span class="flag-icon flag-icon-us" title="Estados Unidos"></span></div>
-    <div class="slot" style="grid-area:r2"><span class="flag-icon flag-icon-mx" title="México"></span></div>
-    <div class="slot" style="grid-area:r3"><span class="flag-icon flag-icon-co" title="Colômbia"></span></div>
+    <div class="slot" style="grid-area:l1"><span class="flag-icon flag-icon-nl"></span></div>
+    <div class="slot" style="grid-area:l2"><span class="flag-icon flag-icon-gb"></span></div>
+    <div class="slot" style="grid-area:l3"><span class="flag-icon flag-icon-ar"></span></div>
+    <div class="slot" style="grid-area:r1"><span class="flag-icon flag-icon-mx"></span></div>
+    <div class="slot" style="grid-area:r2"><span class="flag-icon flag-icon-us"></span></div>
+    <div class="slot" style="grid-area:r3"><span class="flag-icon flag-icon-co"></span></div>
 
     <!-- Fundo -->
-    <div class="slot" style="grid-area:bl"><span class="flag-icon flag-icon-ch" title="Suíça"></span></div>
-    <div class="slot" style="grid-area:b4"><span class="flag-icon flag-icon-uy" title="Uruguai"></span></div>
-    <div class="slot" style="grid-area:b3"><span class="flag-icon flag-icon-jp" title="Japão"></span></div>
-    <div class="slot" style="grid-area:b2"><span class="flag-icon flag-icon-kr" title="Coreia do Sul"></span></div>
-    <div class="slot" style="grid-area:b1"><span class="flag-icon flag-icon-ar" title="Argentina"></span></div>
-    <div class="slot" style="grid-area:br"><span class="flag-icon flag-icon-mx" title="México"></span></div>
+    <div class="slot" style="grid-area:bl"><span class="flag-icon flag-icon-jp"></span></div>
+    <div class="slot" style="grid-area:b4"><span class="flag-icon flag-icon-kr"></span></div>
+    <div class="slot" style="grid-area:b3"><span class="flag-icon flag-icon-ch"></span></div>
+    <div class="slot" style="grid-area:b2"><span class="flag-icon flag-icon-uy"></span></div>
+    <div class="slot" style="grid-area:b1"><span class="flag-icon flag-icon-pe"></span></div>
+    <div class="slot" style="grid-area:br"><span class="flag-icon flag-icon-ca"></span></div>
 
-    <!-- Botão -->
-    <button id="btnPlay">JOGAR</button>
+    <!-- Bola no centro -->
+    <div class="center-image">
+      <img src="https://cdn-icons-png.flaticon.com/512/2769/2769583.png" alt="bola">
+    </div>
   </div>
 
+  <!-- Botão abaixo -->
+  <button id="btnPlay">JOGAR</button>
   <div id="coinArea"></div>
 </div>
 
@@ -162,6 +178,7 @@
   </div>
 </div>
 
+<!-- Sons -->
 <audio id="sndStart" src="https://assets.mixkit.co/active_storage/sfx/1062/1062-preview.mp3" preload="auto"></audio>
 <audio id="sndWin" src="https://assets.mixkit.co/active_storage/sfx/203/203-preview.mp3" preload="auto"></audio>
 <audio id="sndLose" src="https://assets.mixkit.co/active_storage/sfx/245/245-preview.mp3" preload="auto"></audio>
