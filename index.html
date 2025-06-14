@@ -1,114 +1,278 @@
-<!-- Jogo Copa 2 para GitHub Pages -->
 <!DOCTYPE html>
 <html lang="pt">
-<head><meta charset="UTF-8"><title>Copa 2 - Caça-Níquel</title>
+<head>
+  <meta charset="UTF-8">
+  <title>Copa 2 - Caça-Níquel</title>
   <style>
-    body { margin:0; padding:0; text-align:center; font-family:Arial, sans-serif; background:#222; color:#fff; overflow:hidden; }
-    #game{position:relative; max-width:380px; margin:20px auto;}
-    .score{display:flex; justify-content:space-between; background:#000; padding:8px; border:2px solid gold; border-radius:6px; font-size:14px;}
-    #painel{display:grid; grid-template-columns:repeat(4,80px); grid-template-rows:repeat(5,80px); gap:2px; margin:8px;}
-    .slot{width:80px; height:80px; background:#111; border:2px solid #333; display:flex; justify-content:center; align-items:center; position:relative;}
-    .slot.blink{animation:brilho 0.3s infinite alternate;}
-    @keyframes brilho {from{border-color:gold;}to{border-color:red;}}
-    #btnPlay{grid-column:2/4; grid-row:3/4; background:red; color:#fff; font-size:18px; font-weight:bold; border:4px solid #fff; border-radius:10px; cursor:pointer;}
-    #btnPlay:disabled{opacity:0.5; cursor:not-allowed;}
-    #winnerOverlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.8);display:none;justify-content:center;align-items:center;}
-    #winBox{background:#fff;color:#000;padding:16px;border-radius:8px;max-width:90%;}
-    #coinArea{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;}
-    .coin{position:absolute;width:20px;height:20px;background:gold;border-radius:50%;animation:coinJump 1s linear forwards;}
-    @keyframes coinJump{0%{opacity:1}100%{transform:translateY(-200px) scale(0.5);opacity:0;}}
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(#74d300, #179800);
+      font-family: sans-serif;
+      text-align: center;
+      overflow: hidden;
+    }
+    #game {
+      width: 360px;
+      margin: auto;
+      background: #fff;
+      position: relative;
+      padding: 8px;
+      border: 6px solid #333;
+    }
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      background: black;
+      color: red;
+      font-weight: bold;
+      padding: 8px 12px;
+      font-size: 14px;
+    }
+    .top-bar span {
+      background: #222;
+      padding: 4px 8px;
+      border: 2px inset gold;
+      color: yellow;
+    }
+    .grid-bandeiras {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 2px;
+      margin-bottom: 8px;
+    }
+    .flag {
+      width: 100%;
+      height: 26px;
+      object-fit: cover;
+    }
+    #painel {
+      display: grid;
+      grid-template-columns: repeat(5, 60px);
+      grid-template-rows: repeat(4, 60px);
+      gap: 2px;
+      justify-content: center;
+      margin: auto;
+      background: #000;
+    }
+    .slot {
+      background: #111;
+      border: 2px solid #333;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .slot.blink {
+      animation: brilho 0.3s infinite alternate;
+    }
+    @keyframes brilho {
+      from { border-color: gold; }
+      to { border-color: red; }
+    }
+    #btnPlay {
+      margin: 10px auto;
+      background: red;
+      border: 3px solid white;
+      color: white;
+      font-size: 18px;
+      padding: 10px 30px;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 10px;
+    }
+    #btnPlay:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    #winnerOverlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.8);
+      display: none;
+      justify-content: center;
+      align-items: center;
+    }
+    #winBox {
+      background: white;
+      color: black;
+      padding: 20px;
+      border-radius: 10px;
+    }
+    #coinArea {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+    }
+    .coin {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: gold;
+      border-radius: 50%;
+      animation: coinJump 1s linear forwards;
+    }
+    @keyframes coinJump {
+      0% { opacity: 1; transform: translateY(0); }
+      100% { opacity: 0; transform: translateY(-200px) scale(0.5); }
+    }
   </style>
 </head>
 <body>
   <div id="game">
-    <div class="score"><div>Prêmio:<span id="prize">0</span></div><div>Créditos:<span id="credits">100</span></div></div>
-    <div id="painel"></div>
+    <div class="top-bar">
+      <div>PRÊMIO: <span id="prize">0</span></div>
+      <div>CRÉDITOS: <span id="credits">100</span></div>
+    </div>
+
+    <div class="grid-bandeiras">
+      <!-- Bandeiras da imagem original -->
+      <!-- Substitua os nomes abaixo conforme necessário -->
+      <!-- Total: 26 -->
+      <img class="flag" src="flag_1.png" />
+      <img class="flag" src="flag_2.png" />
+      <img class="flag" src="flag_3.png" />
+      <img class="flag" src="flag_4.png" />
+      <img class="flag" src="flag_5.png" />
+      <img class="flag" src="flag_6.png" />
+      <img class="flag" src="flag_7.png" />
+      <img class="flag" src="flag_8.png" />
+      <img class="flag" src="flag_9.png" />
+      <img class="flag" src="flag_10.png" />
+      <img class="flag" src="flag_11.png" />
+      <img class="flag" src="flag_12.png" />
+      <img class="flag" src="flag_13.png" />
+      <img class="flag" src="flag_14.png" />
+      <img class="flag" src="flag_15.png" />
+      <img class="flag" src="flag_16.png" />
+      <img class="flag" src="flag_17.png" />
+      <img class="flag" src="flag_18.png" />
+      <img class="flag" src="flag_19.png" />
+      <img class="flag" src="flag_20.png" />
+      <img class="flag" src="flag_21.png" />
+      <img class="flag" src="flag_22.png" />
+      <img class="flag" src="flag_23.png" />
+      <img class="flag" src="flag_24.png" />
+      <img class="flag" src="flag_25.png" />
+      <img class="flag" src="flag_26.png" />
+    </div>
+
+    <div id="painel">
+      <!-- Criado via JS -->
+    </div>
+
     <button id="btnPlay">JOGAR</button>
     <div id="coinArea"></div>
   </div>
-  <div id="winnerOverlay"><div id="winBox"><h2 id="msgWinner"></h2><button onclick="closeWin()">OK</button></div></div>
+
+  <div id="winnerOverlay">
+    <div id="winBox">
+      <h2 id="msgWinner"></h2>
+      <button onclick="closeWin()">OK</button>
+    </div>
+  </div>
 
   <!-- Sons -->
-  <audio id="sndStart" src="https://mixkit.co/download/game-sound-start.mp3" preload="auto"></audio>
-  <audio id="sndWin" src="https://mixkit.co/download/game-sound-win.mp3" preload="auto"></audio>
-  <audio id="sndLose" src="https://mixkit.co/download/game-sound-lose.mp3" preload="auto"></audio>
+  <audio id="sndStart" src="https://assets.mixkit.co/active_storage/sfx/1062/1062-preview.mp3" preload="auto"></audio>
+  <audio id="sndWin" src="https://assets.mixkit.co/active_storage/sfx/203/203-preview.mp3" preload="auto"></audio>
+  <audio id="sndLose" src="https://assets.mixkit.co/active_storage/sfx/245/245-preview.mp3" preload="auto"></audio>
 
   <script>
-    const flags = ['br','de','fr','es','ar','pt','it','nl','gb','us','mx','co','ch','uy','jp','kr'];
     const painel = document.getElementById('painel');
-    for(let i=0;i<20;i++){
-      const slot = document.createElement('div'); slot.className='slot';
-      const img = document.createElement('img'); img.src=`https://flagcdn.com/w80/${flags[i%flags.length]}.png`;
-      img.style.maxWidth='100%';
+    for (let i = 0; i < 20; i++) {
+      const slot = document.createElement('div');
+      slot.className = 'slot';
+      const img = document.createElement('img');
+      img.src = `flag_${(i % 26) + 1}.png`;
+      img.style.maxWidth = '100%';
       slot.appendChild(img);
-      painel.append(slot);
+      painel.appendChild(slot);
     }
-    const creditsEl= document.getElementById('credits'), prizeEl=document.getElementById('prize');
-    let credits = parseInt(localStorage.getItem('credits'))||100;
-    let prize = parseInt(localStorage.getItem('prize'))||0;
-    creditsEl.textContent=credits; prizeEl.textContent=prize;
-    function save(){localStorage.setItem('credits',credits);localStorage.setItem('prize',prize);}
-    const btn=document.getElementById('btnPlay'), slots=document.querySelectorAll('.slot');
-    const sndStart=document.getElementById('sndStart'),
-          sndWin=document.getElementById('sndWin'),
-          sndLose=document.getElementById('sndLose'),
-          coinArea=document.getElementById('coinArea');
-    const overlay=document.getElementById('winnerOverlay'), msgWinner=document.getElementById('msgWinner');
 
-    btn.onclick = ()=>{
-      if(credits<1){ alert('Sem créditos!'); btn.disabled=true; return; }
-      credits--; save(); creditsEl.textContent=credits;
-      btn.disabled=true;
+    const creditsEl = document.getElementById('credits');
+    const prizeEl = document.getElementById('prize');
+    let credits = parseInt(localStorage.getItem('credits')) || 100;
+    let prize = parseInt(localStorage.getItem('prize')) || 0;
+    creditsEl.textContent = credits;
+    prizeEl.textContent = prize;
+
+    function save() {
+      localStorage.setItem('credits', credits);
+      localStorage.setItem('prize', prize);
+    }
+
+    const btn = document.getElementById('btnPlay');
+    const slots = document.querySelectorAll('.slot');
+    const sndStart = document.getElementById('sndStart');
+    const sndWin = document.getElementById('sndWin');
+    const sndLose = document.getElementById('sndLose');
+    const coinArea = document.getElementById('coinArea');
+    const overlay = document.getElementById('winnerOverlay');
+    const msgWinner = document.getElementById('msgWinner');
+
+    btn.onclick = () => {
+      if (credits < 1) {
+        alert('Sem créditos!');
+        btn.disabled = true;
+        return;
+      }
+      credits--; save(); creditsEl.textContent = credits;
+      btn.disabled = true;
       sndStart.play().catch(() => {});
-      let count=0,flash=30+Math.random()*30;
-      const iv = setInterval(()=>{
-        slots.forEach(s=>s.classList.remove('blink'));
-        const idx=Math.floor(Math.random()*slots.length);
+      let count = 0, flash = 30 + Math.random() * 30;
+      const iv = setInterval(() => {
+        slots.forEach(s => s.classList.remove('blink'));
+        const idx = Math.floor(Math.random() * slots.length);
         slots[idx].classList.add('blink');
-        if(++count>=flash){
+        if (++count >= flash) {
           clearInterval(iv);
           const winIdx = idx;
-          slots.forEach(s=>s.classList.remove('blink'));
+          slots.forEach(s => s.classList.remove('blink'));
           slots[winIdx].classList.add('blink');
-          const gain = Math.floor(Math.random()*20)+5;
-          prize+=gain; credits+=gain;
+          const gain = Math.floor(Math.random() * 20) + 5;
+          prize += gain; credits += gain;
           save();
-          prizeEl.textContent=prize;
-          creditsEl.textContent=credits;
+          prizeEl.textContent = prize;
+          creditsEl.textContent = credits;
           sndWin.play().catch(() => {});
           animateCoins(15);
           sendRank(gain);
           showWin(`TIME GANHADOR +${gain}`);
-          btn.disabled=false;
+          btn.disabled = false;
         }
-      },100);
+      }, 100);
     };
 
-    function animateCoins(n){
-      for(let i=0;i<n;i++){
-        const c=document.createElement('div');c.className='coin';
-        c.style.left= Math.random()*90+'%';
-        c.style.top='80%';
-        coinArea.append(c);
-        c.addEventListener('animationend',()=>c.remove());
+    function animateCoins(n) {
+      for (let i = 0; i < n; i++) {
+        const c = document.createElement('div');
+        c.className = 'coin';
+        c.style.left = Math.random() * 90 + '%';
+        c.style.top = '80%';
+        coinArea.appendChild(c);
+        c.addEventListener('animationend', () => c.remove());
       }
     }
-    function showWin(msg){ msgWinner.textContent=msg; overlay.style.display='flex'; }
-    function closeWin(){
-      overlay.style.display='none';
-      slots.forEach(s=>s.classList.remove('blink'));
-      if(credits<1) btn.disabled=true;
+
+    function showWin(msg) {
+      msgWinner.textContent = msg;
+      overlay.style.display = 'flex';
     }
 
-    function sendRank(gain){
-      const token=prompt('Digite nome/token:')||'Anon';
-      fetch('https://seu-servidor.com/api/ranking',{
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({player:token, prize:gain, time:Date.now()})
-      }).catch(e=>console.log('Ranking erro',e));
+    function closeWin() {
+      overlay.style.display = 'none';
+      slots.forEach(s => s.classList.remove('blink'));
+      if (credits < 1) btn.disabled = true;
     }
 
+    function sendRank(gain) {
+      const token = prompt('Digite nome/token:') || 'Anon';
+      fetch('https://seu-servidor.com/api/ranking', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ player: token, prize: gain, time: Date.now() })
+      }).catch(e => console.log('Ranking erro', e));
+    }
   </script>
 </body>
 </html>
