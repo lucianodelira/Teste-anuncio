@@ -143,9 +143,24 @@
     <label>Escolher Time:</label>
     <select id="betTeam">
       <option value="">Selecione</option>
-      <option value="br">Brasil</option>
-      <option value="de">Alemanha</option>
-      <option value="fr">França</option>
+      <option value="br">Corinthians</option>
+      <option value="de">Vitória</option>
+      <option value="fr">Vasco</option>
+      <option value="es">São Paulo</option>
+      <option value="it">Santos</option>
+      <option value="pt">Flamengo</option>
+      <option value="nl">Ponte Preta</option>
+      <option value="gb">Palmeiras</option>
+      <option value="ar">Atlético Paranaense</option>
+      <option value="mx">Internacional</option>
+      <option value="us">Cruzeiro</option>
+      <option value="co">Botafogo</option>
+      <option value="jp">Fluminense</option>
+      <option value="kr">Campinense</option>
+      <option value="ch">Juventude</option>
+      <option value="uy">Grêmio</option>
+      <option value="pe">Goiás</option>
+      <option value="ca">Coritiba</option>
     </select>
     <input type="number" id="betAmount" placeholder="1-5" min="1" max="5">
     <button onclick="placeBet()">Apostar</button>
@@ -155,7 +170,7 @@
 <script>
   let credits = parseInt(localStorage.getItem('credits')) || 100;
   let prize = parseInt(localStorage.getItem('prize')) || 0;
-  let bets = {}; // { time: valor }
+  let bets = {};
 
   const creditsEl = document.getElementById('credits');
   const prizeEl = document.getElementById('prize');
