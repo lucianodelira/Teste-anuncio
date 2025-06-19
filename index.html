@@ -97,23 +97,26 @@
       object-fit: contain;
     }
     .blink {
-      animation: brilho 0.3s infinite alternate;
-      box-shadow: 0 0 10px gold;
-    }
-    @keyframes brilho {
-      from { border-color: gold; }
-      to { border-color: red; }
-    }
+  animation: brilho 0.2s infinite alternate, pulseBorder 1s infinite;
+  box-shadow: 0 0 20px 10px gold, 0 0 40px 20px yellow;
+  border: 3px solid gold;
+  z-index: 10;
+}
+@keyframes brilho {
+  0% { box-shadow: 0 0 10px 5px gold; border-color: gold; }
+  100% { box-shadow: 0 0 25px 12px red; border-color: red; }
+}
+@keyframes pulseBorder {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
     @keyframes shake {
       0%, 100% { transform: translateX(0); }
       25% { transform: translateX(-3px); }
       75% { transform: translateX(3px); }
     }
-    @keyframes pulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.1); }
-      100% { transform: scale(1); }
-    }
+
     #betList {
       margin-top: 8px;
       background: #222;
