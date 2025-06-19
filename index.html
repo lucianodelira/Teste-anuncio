@@ -4,6 +4,23 @@
   <meta charset="UTF-8">
   <title>Copa 2 – Caça-Níquel</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/6.7.0/css/flag-icon.min.css">
   <style>
     * {
@@ -218,8 +235,12 @@
   </div>
   <button id="btnPlay">JOGAR</button>
   <div id="menu">
-    <label>Adicionar Créditos:</label>
-    <input type="number" id="addCredit" placeholder="Qtd"> <button onclick="addCredits()">Adicionar</button>
+ 
+<!-- Botão para abrir o modal e carregar script -->
+<button id="recargaPix">Recarga via Pix</button>
+
+
+
     <hr>
     <label>Escolher Time:</label>
     <div id="teamButtons">
@@ -254,6 +275,17 @@
   <audio id="loseSound" src="sons/lose.mp3"></audio>
 </div>
 <script>
+
+
+
+
+
+
+
+
+
+
+
   let credits = parseInt(localStorage.getItem('credits')) || 100;
   let prize = parseInt(localStorage.getItem('prize')) || 0;
   let bets = {};
@@ -390,6 +422,88 @@
   };
 
   updateDisplay();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  pixButton.addEventListener('click', () => {
+    alert('Você não possui saldo para retirada');
+  });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+  document.getElementById("recargaPix").addEventListener("click", function () {
+    // Verifica se o script já foi carregado
+    if (!document.getElementById("pix-script-loader")) {
+      const script = document.createElement("script");
+      script.src = "MPayment/script.js";
+      script.id = "pix-script-loader";
+      script.onload = function () {
+        if (typeof openPaymentModal === "function") {
+          openPaymentModal(); // Chama a função após o script carregar
+        }
+      };
+      document.body.appendChild(script);
+    } else {
+      // Se já carregado, apenas chama a função diretamente
+      if (typeof openPaymentModal === "function") {
+        openPaymentModal();
+      }
+    }
+  });
+</script>
+
+
+
+<script src="MPayment/Modal.js"></script>
+
+
+
 </body>
 </html>
