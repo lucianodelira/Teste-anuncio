@@ -4,23 +4,6 @@
   <meta charset="UTF-8">
   <title>Copa 2 – Caça-Níquel</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-
-
-
-
-<link rel="stylesheet" href="MPayment/Styles.css">
-
-
-
-
-
-
-
-
-
-
-
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/6.7.0/css/flag-icon.min.css">
   <style>
     * {
@@ -236,8 +219,16 @@
   <button id="btnPlay">JOGAR</button>
   <div id="menu">
  
-<!-- Botão para abrir o modal e carregar script -->
-<button id="recargaPix">Recarga via Pix</button>
+<button id="pixRecharge" style="width: 100%; margin-bottom: 10px; background: #00aa00; color: white; font-size: 14px; font-weight: bold; border: none; border-radius: 6px; padding: 10px; cursor: pointer;">
+  💳 Recarga via Pix
+</button>
+<div id="pixContainer" style="display:none; background:#111; color:#fff; padding:10px; margin-top:10px; border-radius:8px;">
+  <p><strong>Escaneie o QR Code ou copie a chave Pix:</strong></p>
+  <img id="pixQrCode" src="" style="width:200px; height:auto; border:1px solid #fff;">
+  <p id="pixKeyText" style="word-break:break-all; margin:5px 0;"></p>
+  <button onclick="copyPixKey()">📋 Copiar Chave Pix</button>
+</div>
+
 
 
 
@@ -439,71 +430,60 @@
 
 
 
+let paymentId = null;
+  let paymentCheckInterval = null;
+
+  document.getElementById('pixRecharge').addEventListener('click', () => {
+    fetch("https://script.google.com/macros/s/AKfycbwPXlgv795gYZZIXU8oi56a-yd4iQZ_5BGGYpQP_LK9jJFfBEY83uZ8qluXEDJncBjtKA/exec", {
+      method: 'POST',
+      body: JSON.stringify({ valor: 18.00 }),
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.qr_code_base64 && data.chave && data.id) {
+        paymentId = data.id;
+        document.getElementById('pixQrCode').src = 'data:image/png;base64,' + data.qr_code_base64;
+        document.getElementById('pixKeyText').innerText = data.chave;
+        document.getElementById('pixContainer').style.display = 'block';
+        checkPixPayment();
+        paymentCheckInterval = setInterval(checkPixPayment, 10000);
+      } else {
+        alert("Erro ao gerar cobrança Pix.");
+      }
+    })
+    .catch(err => {
+      alert("Erro na requisição Pix.");
+      console.error(err);
+    });
+  });
+
+  function copyPixKey() {
+    const keyText = document.getElementById('pixKeyText').innerText;
+    navigator.clipboard.writeText(keyText).then(() => {
+      alert("Chave Pix copiada!");
+    });
+  }
+
+  function checkPixPayment() {
+    if (!paymentId) return;
+    fetch(`https://script.google.com/macros/s/AKfycbwPXlgv795gYZZIXU8oi56a-yd4iQZ_5BGGYpQP_LK9jJFfBEY83uZ8qluXEDJncBjtKA/exec?id=${paymentId}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.status === 'approved') {
+          credits += 18;
+          save();
+          updateDisplay();
+          clearInterval(paymentCheckInterval);
+          alert("✅ Pagamento aprovado! Créditos adicionados.");
+          document.getElementById('pixContainer').style.display = 'none';
+        }
+      })
+      .catch(err => console.error("Erro ao verificar pagamento:", err));
+  }
+
   pixButton.addEventListener('click', () => {
     alert('Você não possui saldo para retirada');
   });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<script>
-  document.getElementById("recargaPix").addEventListener("click", function () {
-    // Verifica se o script já foi carregado
-    if (!document.getElementById("pix-script-loader")) {
-      const script = document.createElement("script");
-      script.src = "MPayment/script.js";
-      script.id = "pix-script-loader";
-      script.onload = function () {
-        if (typeof openPaymentModal === "function") {
-          openPaymentModal(); // Chama a função após o script carregar
-        }
-      };
-      document.body.appendChild(script);
-    } else {
-      // Se já carregado, apenas chama a função diretamente
-      if (typeof openPaymentModal === "function") {
-        openPaymentModal();
-      }
-    }
-  });
-</script>
-
-
-
-<script src="MPayment/Modal.js"></script>
-
-
-
 </body>
 </html>
