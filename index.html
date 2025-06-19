@@ -362,7 +362,8 @@
     spinSound.play().catch(() => {});
     slots.forEach(s => s.classList.remove('blink'));
     let count = 0;
-    const flashes = 20 + Math.floor(Math.random() * 10);
+    const flashes = 40 + Math.floor(Math.random() * 15); // por exemplo
+
     const interval = setInterval(() => {
       slots.forEach(s => s.classList.remove('blink'));
       const idx = Math.floor(Math.random() * slots.length);
